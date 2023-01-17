@@ -54,7 +54,10 @@ def create_menu(menu: schemas.MenuBase, db: Session = Depends(get_db)):
 @version(1)
 def delete_menu(menu_id: str, db: Session = Depends(get_db)):
     crud.delete_menu(menu_id, db)
-    return {"status": True, "message": "The menu has been deleted"}
+    return JSONResponse(
+        status_code=200,
+        content={"status": True, "message": "The menu has been deleted"},
+    )
 
 
 @app.patch("/menus/{menu_id}", response_model=schemas.Menu)
