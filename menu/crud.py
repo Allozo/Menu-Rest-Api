@@ -32,7 +32,7 @@ def delete_menu(menu_id: str, db: Session) -> None:
 
 
 def update_menu(
-    old_menu, new_menu: schemas.MenuBase, db: Session
+    old_menu:schemas.Menu, new_menu: schemas.MenuBase, db: Session
 ) -> schemas.MenuBase:
     old_menu.title, old_menu.description = new_menu.title, new_menu.description
     db.add(old_menu)
