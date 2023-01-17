@@ -18,10 +18,7 @@ class SubmenuBase(BaseModel):
 
 class Submenu(SubmenuBase):
     id: str
-    title: str
-    description: str
     dishes_count: int
-    menu_id: str
 
     class Config:
         orm_mode = True
