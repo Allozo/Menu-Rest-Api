@@ -35,11 +35,13 @@ def get_all_menu(db: Session = Depends(get_db)):
 @version(1)
 def get_menu_by_id(menu_id: str, db: Session = Depends(get_db)):
     menu_db = crud.get_menu_by_id(menu_id, db)
-    return (
-        menu_db
-        if menu_db
-        else JSONResponse(status_code=404, content={"detail": "menu not found"})
-    )
+
+    if menu_db is None:
+        return JSONResponse(
+            status_code=404, content={"detail": "menu not found"}
+        )
+
+    return menu_db
 
 
 @app.post("/menus", response_model=schemas.Menu, status_code=201)
@@ -55,9 +57,7 @@ def delete_menu(menu_id: str, db: Session = Depends(get_db)):
     return {"status": True, "message": "The menu has been deleted"}
 
 
-@app.patch(
-    "/menus/{menu_id}", response_model=schemas.Menu
-)
+@app.patch("/menus/{menu_id}", response_model=schemas.Menu)
 @version(1)
 def update_menu(
     menu_id: str, menu_new: schemas.MenuBase, db: Session = Depends(get_db)
@@ -65,7 +65,9 @@ def update_menu(
     menu_db = crud.get_menu_by_id(menu_id, db)
 
     if menu_db is None:
-        return JSONResponse(status_code=404, content={"detail": "menu not found"})
+        return JSONResponse(
+            status_code=404, content={"detail": "menu not found"}
+        )
 
     menu_db = crud.update_menu(menu_db, menu_new, db)
     return menu_db
