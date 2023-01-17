@@ -76,6 +76,71 @@ def update_menu(
     return menu_db
 
 
+@app.get("/menus/{menu_id}/submenus", response_model=list[schemas.Submenu])
+@version(1)
+def get_all_submenu_for_menu(menu_id: str, db: Session = Depends(get_db)):
+    return crud.get_all_submenu(menu_id, db)
+
+
+@app.get(
+    "/menus/{menu_id}/submenus/{submenu_id}", response_model=schemas.Submenu
+)
+@version(1)
+def get_submenu_for_menu_by_id(
+    menu_id: str, submenu_id: str, db: Session = Depends(get_db)
+):
+    submenu_db = crud.get_submenu_by_id(menu_id, submenu_id, db)
+
+    if submenu_db is None:
+        return JSONResponse(
+            status_code=404, content={"detail": "submenu not found"}
+        )
+
+    return submenu_db
+
+
+@app.post(
+    "/menus/{menu_id}/submenus", response_model=schemas.Submenu, status_code=201
+)
+@version(1)
+def create_submenu(
+    menu_id: str, submenu: schemas.SubmenuBase, db: Session = Depends(get_db)
+):
+    submenu_db = crud.create_submenu(menu_id, submenu, db)
+    return submenu_db
+
+
+@app.patch(
+    "/menus/{menu_id}/submenus/{submenu_id}", response_model=schemas.Submenu
+)
+@version(1)
+def update_submenu(
+    menu_id: str,
+    submenu_id: str,
+    new_submenu: schemas.SubmenuBase,
+    db: Session = Depends(get_db),
+):
+    submenu_db = crud.get_submenu_by_id(menu_id, submenu_id, db)
+
+    if submenu_db is None:
+        return JSONResponse(
+            status_code=404, content={"detail": "submenu not found"}
+        )
+
+    menu_db = crud.update_submenu(submenu_db, new_submenu, db)
+    return menu_db
+
+
+@app.delete("/menus/{menu_id}/submenus/{submenu_id}")
+@version(1)
+def delete_submenu(
+    menu_id: str, submenu_id: str, db: Session = Depends(get_db)
+):
+    crud.delete_submenu(menu_id, submenu_id, db)
+    return JSONResponse(
+        status_code=200,
+        content={"status": True, "message": "The submenu has been deleted"},
+    )
 
 
 app = VersionedFastAPI(

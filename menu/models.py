@@ -20,7 +20,7 @@ class Menu(Base):
     )
 
 
-class SubMenu(Base):
+class Submenu(Base):
     __tablename__ = "submenu"
 
     id = Column(Integer, primary_key=True)
@@ -48,4 +48,4 @@ class Dish(Base):
 
     submenu_id = Column(ForeignKey("submenu.id"), nullable=False)
 
-    submenu = relationship("SubMenu", back_populates="dishes")
+    submenu = relationship("Submenu", back_populates="dishes")

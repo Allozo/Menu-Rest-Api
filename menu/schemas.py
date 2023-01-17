@@ -11,13 +11,17 @@ class Dish(BaseModel):
         orm_mode = True
 
 
-class SubMenu(BaseModel):
+class SubmenuBase(BaseModel):
+    title: str
+    description: str
+
+
+class Submenu(SubmenuBase):
     id: str
     title: str
     description: str
     dishes_count: int
-
-    dishes: list[Dish]
+    menu_id: str
 
     class Config:
         orm_mode = True
