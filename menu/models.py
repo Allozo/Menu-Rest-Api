@@ -13,7 +13,7 @@ class Menu(Base):
     submenus_count = Column(Integer, nullable=False)
     dishes_count = Column(Integer, nullable=False)
 
-    submenus = relationship("SubMenu", back_populates="menu")
+    submenu = relationship("SubMenu", back_populates="menu")
 
 
 class SubMenu(Base):
@@ -24,8 +24,10 @@ class SubMenu(Base):
     description = Column(String(120), nullable=False, unique=True)
     dishes_count = Column(Integer, nullable=False)
 
-    menus = relationship("Menu", back_populates="submenu")
-    dishes = relationship("Dish", back_populates="submenus")
+    menu_id = Column(ForeignKey("menu.id"))
+
+    menu = relationship("Menu", back_populates="submenu")
+    dishes = relationship("Dish", back_populates="submenu")
 
 
 class Dish(Base):
@@ -34,6 +36,8 @@ class Dish(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String(40), nullable=False, unique=True)
     description = Column(String(120), nullable=False, unique=True)
-    price = Column(Numeric(10, 2), nullable=False)
+    price = Column(String(10), nullable=False)
 
     submenu_id = Column(ForeignKey("submenu.id"), nullable=False)
+
+    submenu = relationship("SubMenu", back_populates="dishes")

@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class Dish(BaseModel):
-    id: int
+    id: str
     title: str
     description: str
     price: float
@@ -12,7 +12,7 @@ class Dish(BaseModel):
 
 
 class SubMenu(BaseModel):
-    id: int
+    id: str
     title: str
     description: str
     dishes_count: int
@@ -23,14 +23,19 @@ class SubMenu(BaseModel):
         orm_mode = True
 
 
-class Menu(BaseModel):
-    id: int
+class MenuBase(BaseModel):
     title: str
     description: str
+
+
+class Menu(MenuBase):
+    id: str
     submenus_count: int
     dishes_count: int
 
-    submenus: list[SubMenu]
-
     class Config:
         orm_mode = True
+
+
+class MenuNotFound(BaseModel):
+    detail: str = "menu not found"
