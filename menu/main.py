@@ -33,7 +33,7 @@ def get_all_menu(db: Session = Depends(get_db)):
     response_model=schemas.Menu,
 )
 @version(1)
-def get_menu_by_id(menu_id: str, db: Session = Depends(get_db)) -> Any:
+def get_menu_by_id(menu_id: str, db: Session = Depends(get_db)):
     menu_db = crud.get_menu_by_id(menu_id, db)
     return (
         menu_db
@@ -56,7 +56,7 @@ def delete_menu(menu_id: str, db: Session = Depends(get_db)):
 
 
 @app.patch(
-    "/menus/{menu_id}", response_model=Union[schemas.Menu, schemas.MenuNotFound]
+    "/menus/{menu_id}", response_model=schemas.Menu
 )
 @version(1)
 def update_menu(
@@ -65,10 +65,12 @@ def update_menu(
     menu_db = crud.get_menu_by_id(menu_id, db)
 
     if menu_db is None:
-        return schemas.MenuNotFound()
+        return JSONResponse(status_code=404, content={"detail": "menu not found"})
 
     menu_db = crud.update_menu(menu_db, menu_new, db)
     return menu_db
+
+
 
 
 app = VersionedFastAPI(

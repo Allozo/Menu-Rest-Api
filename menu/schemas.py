@@ -35,7 +35,3 @@ class Menu(MenuBase):
 
     class Config:
         orm_mode = True
-
-
-class MenuNotFound(BaseModel):
-    detail: str = "menu not found"
