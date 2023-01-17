@@ -28,7 +28,7 @@ class Submenu(Base):
     description = Column(String(120), nullable=False, unique=True)
     dishes_count = Column(Integer, nullable=False)
 
-    menu_id = Column(ForeignKey("menu.id"))
+    menu_id = Column(ForeignKey("menu.id"), nullable=False)
 
     menu = relationship("Menu", back_populates="submenu")
     dishes = relationship(

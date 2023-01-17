@@ -127,8 +127,8 @@ def update_submenu(
             status_code=404, content={"detail": "submenu not found"}
         )
 
-    menu_db = crud.update_submenu(submenu_db, new_submenu, db)
-    return menu_db
+    submenu_db = crud.update_submenu(submenu_db, new_submenu, db)
+    return submenu_db
 
 
 @app.delete("/menus/{menu_id}/submenus/{submenu_id}")

@@ -1,11 +1,14 @@
 from pydantic import BaseModel
 
 
-class Dish(BaseModel):
-    id: str
+class DishBase(BaseModel):
     title: str
     description: str
-    price: float
+    price: str
+
+
+class Dish(DishBase):
+    id: str
 
     class Config:
         orm_mode = True
