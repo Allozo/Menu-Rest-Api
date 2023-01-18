@@ -9,6 +9,8 @@ class DishBase(BaseModel):
 
 class Dish(DishBase):
     id: str
+    menu_id: str
+    submenu_id: str
 
     class Config:
         orm_mode = True
@@ -21,6 +23,7 @@ class SubmenuBase(BaseModel):
 
 class Submenu(SubmenuBase):
     id: str
+    menu_id: str
     dishes_count: int
 
     class Config:

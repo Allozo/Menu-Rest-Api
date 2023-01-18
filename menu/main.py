@@ -143,6 +143,86 @@ def delete_submenu(
     )
 
 
+@app.get(
+    "/menus/{menu_id}/submenus/{submenu_id}/dishes",
+    response_model=list[schemas.Dish],
+)
+@version(1)
+def get_all_dish_for_submenu(
+    menu_id: str, submenu_id: str, db: Session = Depends(get_db)
+):
+    return crud.get_all_dishes(menu_id, submenu_id, db)
+
+
+@app.get(
+    "/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}",
+    response_model=schemas.Dish,
+)
+@version(1)
+def get_dish_for_menu_by_id(
+    menu_id: str, submenu_id: str, dish_id: str, db: Session = Depends(get_db)
+):
+    dish_db = crud.get_dish_by_id(menu_id, submenu_id, dish_id, db)
+
+    if dish_db is None:
+        return JSONResponse(
+            status_code=404, content={"detail": "dish not found"}
+        )
+
+    return dish_db
+
+
+@app.post(
+    "/menus/{menu_id}/submenus/{submenu_id}/dishes",
+    response_model=schemas.Dish,
+    status_code=201,
+)
+@version(1)
+def create_dish(
+    menu_id: str,
+    submenu_id: str,
+    dish: schemas.DishBase,
+    db: Session = Depends(get_db),
+):
+    dish_db = crud.create_dish(menu_id, submenu_id, dish, db)
+    return dish_db
+
+
+@app.patch(
+    "/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}",
+    response_model=schemas.Dish,
+)
+@version(1)
+def update_dish(
+    menu_id: str,
+    submenu_id: str,
+    dish_id: str,
+    new_dish: schemas.DishBase,
+    db: Session = Depends(get_db),
+):
+    dish_db = crud.get_dish_by_id(menu_id, submenu_id, dish_id, db)
+
+    if dish_db is None:
+        return JSONResponse(
+            status_code=404, content={"detail": "dish not found"}
+        )
+
+    dish_db = crud.update_dish(dish_db, new_dish, db)
+    return dish_db
+
+
+@app.delete("/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}")
+@version(1)
+def delete_dish(
+    menu_id: str, submenu_id: str, dish_id: str, db: Session = Depends(get_db)
+):
+    crud.delete_dish(menu_id, submenu_id, dish_id, db)
+    return JSONResponse(
+        status_code=200,
+        content={"status": True, "message": "The dish has been deleted"},
+    )
+
+
 app = VersionedFastAPI(
     app, version_format="{major}", prefix_format="/api/v{major}"
 )
