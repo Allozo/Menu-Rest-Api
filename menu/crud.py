@@ -40,7 +40,7 @@ def update_menu(
 
 
 def get_all_submenu(menu_id: str, db: Session):
-    res = db.query(models.Submenu).filter(models.Menu.id == menu_id).all()
+    res = db.query(models.Submenu).filter(models.Submenu.menu_id == menu_id).all()
     return res
 
 
