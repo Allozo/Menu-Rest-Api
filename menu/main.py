@@ -1,8 +1,8 @@
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI
 from fastapi_versioning import VersionedFastAPI, version
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-from typing import Any, Union
+from typing import Any
 from . import models, schemas
 
 from . import crud
