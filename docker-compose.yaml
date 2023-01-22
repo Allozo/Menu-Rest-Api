@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  app_menu:
+    container_name: app_menu
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn menu.main:app --proxy-headers --host 0.0.0.0 --port 8000
+    networks:
+      - app_menu_network
+    ports:
+      - "8000:8000"
+
+  main_db_postgres:
+    container_name: main_db_postgres
+    image: postgres:15.1-alpine
+    expose:
+      - 5432
+    ports:
+      - "${DB_PORT}:5432"
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+    networks:
+      - app_menu_network
+
+networks:
+  app_menu_network:
+    name: app_menu_network
