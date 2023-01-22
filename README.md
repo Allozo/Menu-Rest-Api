@@ -12,13 +12,13 @@ poetry install
 
 ### Запуск приложения
 
-Отредактируйте файл `menu/database.py`, закомментировав там блок кода с `PostgreSQL` и расскомментировав блок кода с `sqlite`.
-
 Для запуска приложения воспользуйтесь командой:
 
 ```shell
 poetry run uvicorn menu.main:app
 ```
+
+По умолчанию БД будет `sqlite`.
 
 ### Запуск тестов Postman
 
@@ -28,7 +28,7 @@ poetry run uvicorn menu.main:app
 
 ### Запуск контейнера с приложением (БД sqlite)
 
-Отредактируйте файл `menu/database.py`, закомментировав там блок кода с `PostgreSQL` и расскомментировав блок кода с `sqlite`.
+По умолчанию БД будет `sqlite`.
 
 Сборка образа:
 
@@ -44,12 +44,13 @@ docker run --name flask_app_menu -p 8000:8000 -d menu_app
 
 ### Запуск через Docker-Compose
 
-Используется `PostgreSQL`. По умолчанию ничего менять не надо.
-
-Если изменяли БД на `sqlite`, то отредактируйте файл `menu/database.py`, закомментировав там блок кода с `sqlite` и расскомментировав блок кода с `PostgreSQL`.
+Используется `PostgreSQL`.
 
 Создание и запуск всех контейнеров осуществляется командой:
 
 ```shell
 docker-compose up --build
 ```
+
+### Запуск тестов с помощью Docker-Compose
+

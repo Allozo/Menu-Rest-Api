@@ -3,11 +3,10 @@ from functools import lru_cache
 from . import config
 from . import database
 
+
 # Вызывается по время внедрения зависимости
 def get_db():
-    print(1234)
     db = database.SessionLocal()
-    print(1234)
     try:
         yield db
     finally:
