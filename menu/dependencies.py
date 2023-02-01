@@ -1,16 +1,6 @@
 from functools import lru_cache
 
-from . import config
-from . import database
-
-
-# Вызывается по время внедрения зависимости
-def get_db():
-    db = database.SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+from menu import config
 
 
 # Возврат существующего экземпляра DBSettings вместо создания нового

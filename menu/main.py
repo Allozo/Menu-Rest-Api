@@ -1,12 +1,11 @@
 from fastapi import Depends, FastAPI
-from fastapi_versioning import VersionedFastAPI, version
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from typing import Any
-from . import models, schemas
 
-from . import crud
-from .database import SessionLocal, engine
+from menu import models, schemas, crud
+from menu.database import SessionLocal, engine
+
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -22,17 +21,15 @@ def get_db():
         db.close()
 
 
-@app.get("/menus", response_model=list[schemas.Menu])
-@version(1)
+@app.get("/api/v1/menus", response_model=list[schemas.Menu])
 def get_all_menu(db: Session = Depends(get_db)):
     return crud.get_all_menu(db)
 
 
 @app.get(
-    "/menus/{menu_id}",
+    "/api/v1/menus/{menu_id}",
     response_model=schemas.Menu,
 )
-@version(1)
 def get_menu_by_id(menu_id: str, db: Session = Depends(get_db)):
     menu_db = crud.get_menu_by_id(menu_id, db)
 
@@ -44,14 +41,12 @@ def get_menu_by_id(menu_id: str, db: Session = Depends(get_db)):
     return menu_db
 
 
-@app.post("/menus", response_model=schemas.Menu, status_code=201)
-@version(1)
+@app.post("/api/v1/menus", response_model=schemas.Menu, status_code=201)
 def create_menu(menu: schemas.MenuBase, db: Session = Depends(get_db)):
     return crud.create_menu(menu, db)
 
 
-@app.delete("/menus/{menu_id}")
-@version(1)
+@app.delete("/api/v1/menus/{menu_id}")
 def delete_menu(menu_id: str, db: Session = Depends(get_db)):
     crud.delete_menu(menu_id, db)
     return JSONResponse(
@@ -60,8 +55,7 @@ def delete_menu(menu_id: str, db: Session = Depends(get_db)):
     )
 
 
-@app.patch("/menus/{menu_id}", response_model=schemas.Menu)
-@version(1)
+@app.patch("/api/v1/menus/{menu_id}", response_model=schemas.Menu)
 def update_menu(
     menu_id: str, menu_new: schemas.MenuBase, db: Session = Depends(get_db)
 ) -> Any:
@@ -76,16 +70,17 @@ def update_menu(
     return menu_db
 
 
-@app.get("/menus/{menu_id}/submenus", response_model=list[schemas.Submenu])
-@version(1)
+@app.get(
+    "/api/v1/menus/{menu_id}/submenus", response_model=list[schemas.Submenu]
+)
 def get_all_submenu_for_menu(menu_id: str, db: Session = Depends(get_db)):
     return crud.get_all_submenu(menu_id, db)
 
 
 @app.get(
-    "/menus/{menu_id}/submenus/{submenu_id}", response_model=schemas.Submenu
+    "/api/v1/menus/{menu_id}/submenus/{submenu_id}",
+    response_model=schemas.Submenu,
 )
-@version(1)
 def get_submenu_for_menu_by_id(
     menu_id: str, submenu_id: str, db: Session = Depends(get_db)
 ):
@@ -100,9 +95,10 @@ def get_submenu_for_menu_by_id(
 
 
 @app.post(
-    "/menus/{menu_id}/submenus", response_model=schemas.Submenu, status_code=201
+    "/api/v1/menus/{menu_id}/submenus",
+    response_model=schemas.Submenu,
+    status_code=201,
 )
-@version(1)
 def create_submenu(
     menu_id: str, submenu: schemas.SubmenuBase, db: Session = Depends(get_db)
 ):
@@ -111,9 +107,9 @@ def create_submenu(
 
 
 @app.patch(
-    "/menus/{menu_id}/submenus/{submenu_id}", response_model=schemas.Submenu
+    "/api/v1/menus/{menu_id}/submenus/{submenu_id}",
+    response_model=schemas.Submenu,
 )
-@version(1)
 def update_submenu(
     menu_id: str,
     submenu_id: str,
@@ -131,8 +127,7 @@ def update_submenu(
     return submenu_db
 
 
-@app.delete("/menus/{menu_id}/submenus/{submenu_id}")
-@version(1)
+@app.delete("/api/v1/menus/{menu_id}/submenus/{submenu_id}")
 def delete_submenu(
     menu_id: str, submenu_id: str, db: Session = Depends(get_db)
 ):
@@ -144,10 +139,9 @@ def delete_submenu(
 
 
 @app.get(
-    "/menus/{menu_id}/submenus/{submenu_id}/dishes",
+    "/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes",
     response_model=list[schemas.Dish],
 )
-@version(1)
 def get_all_dish_for_submenu(
     menu_id: str, submenu_id: str, db: Session = Depends(get_db)
 ):
@@ -155,10 +149,9 @@ def get_all_dish_for_submenu(
 
 
 @app.get(
-    "/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}",
+    "/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}",
     response_model=schemas.Dish,
 )
-@version(1)
 def get_dish_for_menu_by_id(
     menu_id: str, submenu_id: str, dish_id: str, db: Session = Depends(get_db)
 ):
@@ -173,11 +166,10 @@ def get_dish_for_menu_by_id(
 
 
 @app.post(
-    "/menus/{menu_id}/submenus/{submenu_id}/dishes",
+    "/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes",
     response_model=schemas.Dish,
     status_code=201,
 )
-@version(1)
 def create_dish(
     menu_id: str,
     submenu_id: str,
@@ -189,10 +181,9 @@ def create_dish(
 
 
 @app.patch(
-    "/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}",
+    "/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}",
     response_model=schemas.Dish,
 )
-@version(1)
 def update_dish(
     menu_id: str,
     submenu_id: str,
@@ -211,8 +202,7 @@ def update_dish(
     return dish_db
 
 
-@app.delete("/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}")
-@version(1)
+@app.delete("/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}")
 def delete_dish(
     menu_id: str, submenu_id: str, dish_id: str, db: Session = Depends(get_db)
 ):
@@ -221,8 +211,3 @@ def delete_dish(
         status_code=200,
         content={"status": True, "message": "The dish has been deleted"},
     )
-
-
-app = VersionedFastAPI(
-    app, version_format="{major}", prefix_format="/api/v{major}"
-)
