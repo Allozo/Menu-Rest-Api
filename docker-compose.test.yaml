@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  app_menu:
+    container_name: app_menu
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: poetry run pytest tests/test_main.py
+    environment:
+      - SQLALCHEMY_SILENCE_UBER_WARNING=1
+    ports:
+      - "8000:8000"

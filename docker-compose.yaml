@@ -11,10 +11,14 @@ services:
       - app_menu_network
     ports:
       - "8000:8000"
+    depends_on:
+      main_db_postgres:
+        condition: service_healthy
 
   main_db_postgres:
     container_name: main_db_postgres
     image: postgres:15.1-alpine
+    user: postgres
     expose:
       - 5432
     ports:
@@ -25,6 +29,11 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
     networks:
       - app_menu_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 networks:
   app_menu_network:
