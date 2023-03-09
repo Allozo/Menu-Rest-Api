@@ -20,6 +20,8 @@ poetry run uvicorn menu.main:app
 
 По умолчанию БД будет `sqlite`.
 
+После этого можно перейти по [ссылке](http://127.0.0.1:8000/docs), чтобы увидеть все доступные методы.
+
 ### Запуск тестов Postman
 
 Для запуска тестов скачайте Postman, импортируйте туда два файла из папки `tests`, выберите окружение и запустите все тесты.
@@ -57,6 +59,8 @@ docker build -t menu_app .
 docker run --name flask_app_menu -p 8000:8000 -d menu_app
 ```
 
+После этого можно перейти по [ссылке](http://127.0.0.1:8000/docs), чтобы увидеть все доступные методы.
+
 ### Запуск приложения через Docker-Compose
 
 Используется `PostgreSQL`.
@@ -74,3 +78,5 @@ docker-compose up --build -d
 ```shell
 docker-compose -f docker-compose.test.yaml up --build
 ```
+
+После этого можно перейти по [ссылке](http://127.0.0.1:8000/docs), чтобы увидеть все доступные методы.
